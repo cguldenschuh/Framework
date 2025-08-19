@@ -10,11 +10,15 @@ To view a copy of this license, visit:
 Included material:
 
 - FRAMEWORK_DESKTOP_BLANK_TILE.stl from:
+
       [https://github.com/FrameworkComputer/Framework-Desktop.git]()
+
   © 2025 by Framework Computer Inc is licensed under CC BY 4.0.er Inc is licensed under CC BY 4.0.
 
 - lib_cutouts.scad (used by honeycomb) from:
+
       [https://github.com/paul1522/OpenSCAD-Projects.git]()
+
   © 2019, MIT License
 
 ## What is it?
@@ -90,3 +94,66 @@ Easiest:
    Again, it may not be a problem at all.
 
 4. All testing done with Orca Slicer 2.3.0 and a Bambu Labs P1S.  Mostly BL PLA Basic.
+
+## Build Variables
+
+### The tile selecton variables
+
+| Variable        | Use                                   |
+| --------------- | ------------------------------------- |
+| bBlank          | Blank tile                            |
+| bHorizontal     | Horizontal slats                      |
+| bDiagonal       | Diagonal slats                        |
+| bCrosshatch     | Crossed horizontal and vertical slats |
+| bLattice        | Crossed diagonal slats                |
+| bDiamond        | Crossed horizontal and diagonal slats |
+| bSunburst       | Rayed star                            |
+| bHoneycomb      | Honeycomb tile                        |
+| bHoneycombMulti | Multi-tile honeycomb                  |
+| bMBlank         | Multi-tile blank                      |
+| bFaceplate      | A full faceplate for testing fit      |
+
+### Mounting selection
+
+| Variable | Use                                       |
+| -------- | ----------------------------------------- |
+| bMount   | Add mounts to tiles; default true         |
+| bMStyle  | Type of mount; 0=skeletonized, 1=blocking |
+
+NOTE: These are likely to be merged into a single bMStyle (none, skeletonized, blocking)
+
+### Multi-tile variables
+
+| Variable  | Use                                      |
+| --------- | ---------------------------------------- |
+| bHC_w     | width of honeycomb multi-tile            |
+| bHC_h     | height of honeycomb  multi-tile          |
+| bMB_w     | width of blank  multi-tile               |
+| bMB_h     | height of blank  multi-tile              |
+| bMB_style | Mount style (0=corners, 1=all, 2=select) |
+| bMB_basex | vector of x locations (0-2)              |
+| bMB_basey | vector of y locations (0-6)              |
+
+NOTE: It is likely that the honeycomb and blank height and width parameters will be merged.
+
+### Other sizing variables
+
+| Variable | Use                                           |
+| -------- | --------------------------------------------- |
+| TFACE    | Height of the tile face                       |
+| TBORDER  | Size of the border around the tile face [0:3] |
+| GRIDCNT  | Number of slats in horizontal/diagonal tiles  |
+| radi     | Inner radius for honeycomb                    |
+| rado     | Outer radius for honeycomb                    |
+
+## Command Line
+
+You can run OpenSCAD from the command line to build selected .stl files.  How you do this is OS dependant, and I recommend an internet search.  I have an alias:
+
+    alias oscad='flatpak run org.openscad.OpenSCAD'
+
+Then:
+
+    oscad -o blank.stl -D bBlank=true Framework_tiles_1.scad
+
+will generate a .stl file for a blank tile.
