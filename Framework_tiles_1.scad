@@ -286,8 +286,15 @@ module honeycm(wid=3, hgt=2, bases=1) {
     myhgt = TDEPTH * hgt;
     difference() {
         cube([mywid, myhgt, TFACE]);
-        translate([TBORDER, TBORDER, -.01]) linear_extrude(TFACE+.02)
-            honeycomb(w=mywid-TBORDER, l=myhgt-TBORDER, ri=radi, ro=rado, fn=6);
+        translate([TBORDER, TBORDER, -.01]) {
+            linear_extrude(TFACE+.02)
+                honeycomb(w=mywid-TBORDER, l=myhgt-TBORDER, ri=radi, ro=rado, fn=6);
+        }
+    }
+    translate([0, 0, TFACE]) difference() {
+        cube([mywid, myhgt, TFACE+.65]);
+        translate([TBORDER, TBORDER, -.01])
+            cube([mywid-(TBORDER*2), myhgt-(TBORDER*2), 2.01]);
     }
     if (bases == 2) {
         for (x=[0:TWIDTH:mywid-1], y=[0:TDEPTH:myhgt-1])
