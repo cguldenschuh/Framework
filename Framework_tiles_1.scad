@@ -25,7 +25,7 @@ bMount = true;
 // Mount style
 bMStyle = 0;    // [0:Skeleton, 1:Blocking]
 // Blank tile
-bBlank = true;
+bBlank = false;
 // Horizontal slats
 bHorizontal = false;
 // Diagonal slats
@@ -215,13 +215,12 @@ module sbase(type=0) {
         widthb = (TWIDTH - (CUTOUT * 1)) / 2 * 1 - TBORDER;
         lenb = TDEPTH - (TBORDER*2);
         translate([TBORDER, TBORDER, 0]) {
-            cube([widthb, lenb, TFACE+.5]);
-            cube([lenb, widthb, TFACE+.5]);
+            difference() {
+                cube([lenb, lenb, TFACE+.5]);
+                translate([widthb, widthb, 0])
+                    cube([lenb-(widthb*2), lenb-(widthb*2), TFACE+.5]);
+            }
         }
-        translate([TBORDER+CUTOUT+widthb, TBORDER, 0]) {
-            cube([widthb, lenb, TFACE+.5]);
-        }
-        translate([TBORDER, TDEPTH-widthb-TBORDER, 0]) cube([lenb, widthb, TFACE+.5]);
     }
 }
 
