@@ -1,10 +1,10 @@
 module myBreadboard(w, l, ro, ri) {
-	echo(w, l, ro, ri);
+	//echo(w, l, ro, ri);
 	cols = floor((w - ((ro - ri) * 2)) / 2 / ro) - 1;
 	rows = floor((l - ((ro - ri) * 2)) / 2 / ro) - 1;
 	offx = floor((w - (cols * 2 * ro)) / 2);
 	offy = floor((l - (rows * 2 * ro)) / 2);
-	echo (cols, rows);
+	//echo (cols, rows);
 	for (col = [0:cols]) {
 		for (row = [0:rows]) {
 			translate([2 * ro * col + offx, 2 * ro * row + offy, 0]) {
@@ -15,12 +15,12 @@ module myBreadboard(w, l, ro, ri) {
 }
 
 module myLattice(w, l, ro, ri) {
-	echo(w, l, ro, ri);
+	//echo(w, l, ro, ri);
 	cols = floor((w - ((ro - ri) * 2)) / ro) - 2;
 	rows = floor((l - ((ro - ri) * 2)) / 2 / ro) - 1;
 	offx = floor((w - (cols * ro)) / 2);
 	offy = floor((l - (rows * 2 * ro)) / 2);
-	echo (cols, rows);
+	//echo (cols, rows);
 	for (col = [0:cols]) {
 		if (col / 2 == floor(col/2)) {
 			for (row = [0:rows]) {
@@ -39,12 +39,12 @@ module myLattice(w, l, ro, ri) {
 }
 
 module honeycomb(w, l, ro, ri, fn) {
-	echo(w, l, ro, ri);
+	//echo(w, l, ro, ri);
 	cols = floor((w - ((ro - ri) * 2)) / 1.75 / ro) - 1;
 	rows = floor((l - ((ro - ri) * 2)) / 2 / ro) - 1;
 	offx = floor((w - (cols * 1.75 * ro)) / 2);	
 	offy = floor((l - (rows * 2 * ro)) / 2);
-	echo (cols, rows);
+	//echo (cols, rows);
 	for (col = [0:cols]) {
 		if (col / 2 == floor(col/2)) {
 			for (row = [0:rows]) {

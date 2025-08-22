@@ -339,7 +339,7 @@ module blankm(wid=3, hgt=2, bases=1, basex=[0,2,0,2], basey=[0,1,0,1]) {
     if (bases == 3) {
         assert((len(basex)==len(basey)), "bMB_basex and bMB_basey have different sizes");
         for (i = [0:len(basex)-1]) {
-            echo(basex[i], basey[i]);
+            //echo(basex[i], basey[i]);
             translate([basex[i]*TWIDTH, basey[i]*TDEPTH, TFACE-.15]) sbase(type=bMStyle);
         }
     }
