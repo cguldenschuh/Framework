@@ -10,15 +10,15 @@ To view a copy of this license, visit:
 Included material:
 
 - FRAMEWORK_DESKTOP_BLANK_TILE.stl from:
-
+  
       [https://github.com/FrameworkComputer/Framework-Desktop.git]()
-
+  
   © 2025 by Framework Computer Inc is licensed under CC BY 4.0.er Inc is licensed under CC BY 4.0.
 
 - lib_cutouts.scad (used by honeycomb) from:
-
-      [https://github.com/paul1522/OpenSCAD-Projects.git]()
-
+  
+      [https://github.com/.pul1522/OpenScad-Projects.git]()
+  
   © 2019, MIT License
 
 ## What is it?
@@ -156,4 +156,4 @@ Then:
 
     oscad -o blank.stl -D bBlank=true Framework_tiles_1.scad
 
-will generate a .stl file for a blank tile.
+will generate an .stl file for a blank tile.
