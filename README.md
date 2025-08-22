@@ -59,7 +59,7 @@ Easiest:
    **bHoneycombMulti**, and **bMBlank** are single tiles.
 4. At the top of this sections are two important items:  bMount selects
    whether or not the mounting tabs are generated, and Mount_style slects
-   either fully skeletonized or "blocking" style mounts are generated (see Tips
+   either fully skeletonized, "blocking", or solid style mounts are generated (see Tips
    section below)
 5. "Build size parameters" has a few things for special purposes:
    - **TFACE** is the thickness of the face of the tile.  My intention is that this makes the tile flush with the front of the faceplate.  See Caveats.
@@ -115,10 +115,10 @@ Easiest:
 
 ### Mounting selection
 
-| Variable | Use                                       |
-| -------- | ----------------------------------------- |
-| bMount   | Add mounts to tiles; default true         |
-| bMStyle  | Type of mount; 0=skeletonized, 1=blocking |
+| Variable | Use                                                |
+| -------- | -------------------------------------------------- |
+| bMount   | Add mounts to tiles; default true                  |
+| bMStyle  | Type of mount; 0=skeletonized, 1=blocking, 2=solid |
 
 NOTE: These are likely to be merged into a single bMStyle (none, skeletonized, blocking)
 

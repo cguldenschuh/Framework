@@ -23,7 +23,7 @@
 // Add skeletonized mounts
 bMount = true;
 // Mount style
-bMStyle = 0;    // [0:Skeleton, 1:Blocking]
+bMStyle = 0;    // [0:Skeleton, 1:Blocking, 2:Solid]
 // Blank tile
 bBlank = false;
 // Horizontal slats
@@ -200,18 +200,27 @@ module sbase(type=0) {
     difference() {
         translate([-88.6, -127.48, -204.]) 
             import("FRAMEWORK_DESKTOP_BLANK_TILE.stl", convexity=10);
+        // Slice off the face of the blank
         translate([0, 0, -1]) cube([29.5, 29.5, 1]);
-        translate([2, 2, 0]) cube([24.5, 24.5, 1.5]);
-        translate([2, 28.5/2-1.5, 0]) cube([24.5, 3, 2]);
+        if (type != 2) {
+            // If not solid base, cut out interior
+            translate([2, 2, 0]) cube([24.5, 24.5, 1.5]);
+            translate([2, 28.5/2-1.5, 0]) cube([24.5, 3, 2]);
+        }
     }
-    translate([9.25, 1, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
-    translate([18.25, 1, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
-    translate([27.6, 18.25, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
-    translate([1, 19.4, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
+    if (type != 2) {
+        // Supports for latches
+        translate([9.25, 1, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
+        translate([18.25, 1, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
+        translate([27.6, 18.25, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
+        translate([1, 19.4, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
+    }
     if (type==0) {
+        // If full skeleton, add a cross brace under alignment lugs
         translate([28.5/2-.5, 1, 0]) cube([1, 26, 1.5]);
     }
     if (type==1) {
+        // If blocking, add a wider brace around the edge
         widthb = (TWIDTH - (CUTOUT * 1)) / 2 * 1 - TBORDER;
         lenb = TDEPTH - (TBORDER*2);
         translate([TBORDER, TBORDER, 0]) {
