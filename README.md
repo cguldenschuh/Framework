@@ -8,19 +8,19 @@
 Copyright © 2025 Charles Guldenschuh.  Licensed under CC BY 4.0.
 To view a copy of this license, visit:
 
-        [https://creativecommons.org/licenses/by/4.0/]()
+        https://creativecommons.org/licenses/by/4.0/
 
 Included material:
 
 - FRAMEWORK_DESKTOP_BLANK_TILE.stl from:
   
-      [https://github.com/FrameworkComputer/Framework-Desktop.git]()
+      https://github.com/FrameworkComputer/Framework-Desktop.git
   
   © 2025 by Framework Computer Inc is licensed under CC BY 4.0.er Inc is licensed under CC BY 4.0.
 
 - lib_cutouts.scad (used by honeycomb) from:
   
-      [https://github.com/.pul1522/OpenScad-Projects.git]()
+      https://github.com/.pul1522/OpenScad-Projects.git
   
   © 2019, MIT License
 
