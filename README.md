@@ -19,7 +19,7 @@ Included material:
 
 - lib_cutouts.scad (used by honeycomb) from:
   
-      https://github.com/.pul1522/OpenScad-Projects.git
+      https://github.com/paul1522/OpenScad-Projects.git
   
   © 2019, MIT License
 
