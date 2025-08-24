@@ -16,14 +16,14 @@
 //
 //  https://github.com/FrameworkComputer/Framework-Desktop/Tiles/FRAMEWORK_DESKTOP_BLANK_TILE.stp
 //
-// Base tile size
+// Update history:
+// Issue 2      20250824    cpg     clean up mount style, merge multi-tile size parameters
+//
 
 /* [Build Selection] */
 
-// Add skeletonized mounts
-bMount = true;
 // Mount style
-bMStyle = 0;    // [0:Skeleton, 1:Blocking, 2:Solid]
+bMStyle = 0;    // [0:Skeleton, 1:Blocking, 2:Solid, 3:None]
 // Blank tile
 bBlank = false;
 // Horizontal slats
@@ -196,38 +196,42 @@ module diagonal() {
 // Alternatively, the tiles and the mounting bases can be printed separately and
 // connected with an appropriate glue.
 //
+// Type = [0: skeletonized, 1:blocking, 2:solid, 3:none]
+//
 module sbase(type=0) {
-    difference() {
-        translate([-88.6, -127.48, -204.]) 
-            import("FRAMEWORK_DESKTOP_BLANK_TILE.stl", convexity=10);
-        // Slice off the face of the blank
-        translate([0, 0, -1]) cube([29.5, 29.5, 1]);
-        if (type != 2) {
-            // If not solid base, cut out interior
-            translate([2, 2, 0]) cube([24.5, 24.5, 1.5]);
-            translate([2, 28.5/2-1.5, 0]) cube([24.5, 3, 2]);
+    if (type != 3) {
+        difference() {
+            translate([-88.6, -127.48, -204.]) 
+                import("FRAMEWORK_DESKTOP_BLANK_TILE.stl", convexity=10);
+            // Slice off the face of the blank
+            translate([0, 0, -1]) cube([29.5, 29.5, 1]);
+            if (type != 2) {
+                // If not solid base, cut out interior
+                translate([2, 2, 0]) cube([24.5, 24.5, 1.5]);
+                translate([2, 28.5/2-1.5, 0]) cube([24.5, 3, 2]);
+            }
         }
-    }
-    if (type != 2) {
-        // Supports for latches
-        translate([9.25, 1, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
-        translate([18.25, 1, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
-        translate([27.6, 18.25, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
-        translate([1, 19.4, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
-    }
-    if (type==0) {
-        // If full skeleton, add a cross brace under alignment lugs
-        translate([28.5/2-.5, 1, 0]) cube([1, 26, 1.5]);
-    }
-    if (type==1) {
-        // If blocking, add a wider brace around the edge
-        widthb = (TWIDTH - (CUTOUT * 1)) / 2 * 1 - TBORDER;
-        lenb = TDEPTH - (TBORDER*2);
-        translate([TBORDER, TBORDER, 0]) {
-            difference() {
-                cube([lenb, lenb, TFACE+.5]);
-                translate([widthb, widthb, 0])
-                    cube([lenb-(widthb*2), lenb-(widthb*2), TFACE+.5]);
+        if (type != 2) {
+            // Supports for latches
+            translate([9.25, 1, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
+            translate([18.25, 1, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
+            translate([27.6, 18.25, 0]) rotate([0, 0, 45]) cube([.7, 12, 1.5]);
+            translate([1, 19.4, 0]) rotate([0, 0, -45]) cube([.7, 12, 1.5]);
+        }
+        if (type == 0) {
+            // If full skeleton, add a cross brace under alignment lugs
+            translate([28.5/2-.5, 1, 0]) cube([1, 26, 1.5]);
+        }
+        if (type == 1) {
+            // If blocking, add a wider brace around the edge
+            widthb = (TWIDTH - (CUTOUT * 1)) / 2 * 1 - TBORDER;
+            lenb = TDEPTH - (TBORDER*2);
+            translate([TBORDER, TBORDER, 0]) {
+                difference() {
+                    cube([lenb, lenb, TFACE+.5]);
+                    translate([widthb, widthb, 0])
+                        cube([lenb-(widthb*2), lenb-(widthb*2), TFACE+.5]);
+                }
             }
         }
     }
@@ -360,52 +364,56 @@ module blankm(wid=3, hgt=2, bases=1, basex=[0,2,0,2], basey=[0,1,0,1]) {
 if (bBlank) {
     translate([TWIDTH*0, TDEPTH*0, 0]) { 
         blank(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bHorizontal) {
     translate([TWIDTH*1+4, TDEPTH*0, 0]) { 
         straight(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bDiagonal) {
     translate([TWIDTH*0, TDEPTH*1+4, 0]) { 
         diagonal(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle); 
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle); 
     }
 }
 if (bSunburst) {
     translate([TWIDTH*1+4, TDEPTH*1+4, 0]) { 
         star(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bCrosshatch) {
     translate([TWIDTH*2+8, TDEPTH*0, 0]) { 
         crosshatch(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bLattice) {
     translate([TWIDTH*2+8, TDEPTH*1+4, 0]) {
         lattice(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bDiamond) {
     translate([TWIDTH*0, TDEPTH*2+8, 0]) { 
         diamond(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
 if (bHoneycomb) {
     translate([TWIDTH*1+4, TDEPTH*2+8, 0]) {
         honeyc(); 
-        if (bMount) translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
     }
 }
-if (bBase) translate([TWIDTH*2+8, TDEPTH*2+8, 0]) sbase(type=bMStyle);
+if (bBase) {
+    translate([TWIDTH*2+8, TDEPTH*2+8, 0]) {
+       sbase(type=bMStyle);
+    }
+}
 
 if (bHoneycombMulti) {
     translate([TWIDTH*3+12, TDEPTH*0, 0]) { 

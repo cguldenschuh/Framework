@@ -2,7 +2,6 @@
 
 ![Example-Tiles](https://github.com/cguldenschuh/Framework/blob/main/example_faces.png)
 
-
 ## License
 
 Copyright © 2025 Charles Guldenschuh.  Licensed under CC BY 4.0.
@@ -60,10 +59,7 @@ Easiest:
 2. Open Framework_tiles_1.scad with OpenSCAD.
 3. Open the **"Build Selection"** customizer section; All selections EXCEPT
    **bHoneycombMulti**, and **bMBlank** are single tiles.
-4. At the top of this sections are two important items:  bMount selects
-   whether or not the mounting tabs are generated, and Mount_style slects
-   either fully skeletonized, "blocking", or solid style mounts are generated (see Tips
-   section below)
+4. At the top of this section is an important item:  **bMStyle** select the mount style to be used, either fully skeletonized, "blocking", solid style, or no mounts are generated (see Tips section below)
 5. "Build size parameters" has a few things for special purposes:
    - **TFACE** is the thickness of the face of the tile.  My intention is that this makes the tile flush with the front of the faceplate.  See Caveats.
    - **TBORDER** is the border around the outside edge of the tile.  Mostly useful for the slat style tiles and the sunburst. It has an upper limit that is totally arbitrary.  Setting to zero may give an effect you prefer.
@@ -118,12 +114,9 @@ Easiest:
 
 ### Mounting selection
 
-| Variable | Use                                                |
-| -------- | -------------------------------------------------- |
-| bMount   | Add mounts to tiles; default true                  |
-| bMStyle  | Type of mount; 0=skeletonized, 1=blocking, 2=solid |
-
-NOTE: These are likely to be merged into a single bMStyle (none, skeletonized, blocking)
+| Variable | Use                                                        |
+| -------- | ---------------------------------------------------------- |
+| bMStyle  | Type of mount; 0=skeletonized, 1=blocking, 2=solid, 3=none |
 
 ### Multi-tile variables
 
