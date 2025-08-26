@@ -18,7 +18,14 @@
 //
 // Update history:
 // Issue 2      20250824    cpg     clean up mount style, merge multi-tile size parameters
-//
+// Issue 4      20250825    cpg     tiles not latching
+//                                  1. Adjusted tile size to match the .stl file, rather
+//                                     than the .pdf. Added BASEZOFF for the mount Z offset.
+//                                  2. Set the honeycomb inner radius so that the 
+//                                     customizer works better.
+//                                  3. Change the blank tile to use the Framework .stl
+//                                     instead of building it.
+//                                  4. Force the support border to be 1mm on multi-tiles.
 
 /* [Build Selection] */
 
@@ -69,8 +76,8 @@ bTest = false;
 
 /* [Hidden] */
 // Tile size DO NOT CHANGE
-TWIDTH = 28.45;
-TDEPTH = 28.45;
+TWIDTH = 28.5;
+TDEPTH = 28.5;
 
 // Faceplate size - WIP Height not guarenteed
 FACEPLATE_WIDTH = 96.8;
@@ -88,10 +95,11 @@ GRIDCNT = 10;
 GRIDGAP = ((TWIDTH - (TBORDER*2)*0) / (GRIDCNT*2+1));
 //GRIDGAP = ((TWIDTH - (TBORDER*2)) / GRIDCNT);
 // Honeycomb Inner radius
-radi = 1.0;
+radi = 1.01;
 // Honeycomb Outer radius
 rado = 1.15;
 
+BASEZOFF = TFACE - .1549;
 
 //
 // WIP: The faceplate for mounting the tiles
@@ -130,28 +138,36 @@ module face_plate() {
 
 module do_test() {
     translate([-(FACEPLATE_WIDTH+4), 0, 0]) {
-        offsety = (FACEPLATE_HEIGHT - (TDEPTH * 6)) * 2 / 3 + 9.5;
-        sbase(type=1);
-        //translate([(TWIDTH-CUTOUT)/2, (TWIDTH-CUTOUT)/2, 0]) #cube([CUTOUT, CUTOUT, 1]);
-        // New part of base
-//        {
-//            widthb = (TWIDTH - (CUTOUT * 1)) / 2 * 1 - TBORDER;
-//            lenb = TDEPTH - (TBORDER*2);
-//            translate([TBORDER, TBORDER, 0]) {
-//                #cube([widthb, lenb, TFACE+.4]);
-//                #cube([lenb, widthb, TFACE+.4]);
+        translate([1.5, 1.5, 0]) linear_extrude(.1) scale([.58, .58, 0]) import("/home/cguldenschuh/Downloads/nixos-plain-logo.svg");
+//        linear_extrude(TFACE) {
+//            difference() {
+//                square([TWIDTH, TDEPTH]);
+//                rotate([0, 0, -45]) union() {
+//                    for (i = [-(GRIDGAP/2):GRIDGAP*2:TWIDTH-(GRIDGAP)]) {
+//                        translate([i, TBORDER*0, 0]) square([GRIDGAP, TDEPTH*sqrt(2)]);
+//                        translate([-(i+GRIDGAP), TBORDER*0, 0]) square([GRIDGAP, TDEPTH*sqrt(2)]);
+//                    }
+//                }
 //            }
-//            translate([TBORDER+CUTOUT+widthb, TBORDER, 0]) {
-//                #cube([widthb, lenb, TFACE+.4]);
+//            difference() {
+//                square([TWIDTH, TDEPTH]);
+//                translate([TBORDER, TBORDER, 0]) square([TWIDTH-(TBORDER*2), TDEPTH-(TBORDER*2)]);
 //            }
-//            translate([TBORDER, TDEPTH-widthb-TBORDER, 0])    #cube([lenb, widthb, TFACE+.5]);
 //        }
+        difference() {
+            honeycm(wid=3, hgt=3, bases=1);
+            translate([TWIDTH, TDEPTH, 0]) cube([TWIDTH, TDEPTH, TFACE]);
+        }
+        translate([TWIDTH, TDEPTH, 0]) star();
+        translate([TWIDTH, TDEPTH, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 
 // Blank tile
 module blank() {
-    cube([TWIDTH, TDEPTH, TFACE]);
+//    cube([TWIDTH, TDEPTH, TFACE]);
+    translate([-88.618, -127.535, -203.2]) 
+        import("FRAMEWORK_DESKTOP_BLANK_TILE.stl", convexity=10);
 }
 
 // Horizontal/Vertical slats
@@ -201,7 +217,8 @@ module diagonal() {
 module sbase(type=0) {
     if (type != 3) {
         difference() {
-            translate([-88.6, -127.48, -204.]) 
+            translate([-88.618, -127.535, -204.]) 
+//            translate([-88.6, -127.48, -203.]) 
                 import("FRAMEWORK_DESKTOP_BLANK_TILE.stl", convexity=10);
             // Slice off the face of the blank
             translate([0, 0, -1]) cube([29.5, 29.5, 1]);
@@ -311,11 +328,11 @@ module honeycm(wid=3, hgt=2, bases=1) {
     }
     if (bases == 2) {
         for (x=[0:TWIDTH:mywid-1], y=[0:TDEPTH:myhgt-1])
-            translate([x, y, TFACE-.15]) sbase(type=bMStyle);
+            translate([x, y, BASEZOFF]) sbase(type=bMStyle);
     }
     if (bases == 1) {
         for (x=[0, mywid-TWIDTH], y=[0, myhgt-TDEPTH])
-            translate([x, y, TFACE-.15]) sbase(type=bMStyle);
+            translate([x, y, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 
@@ -335,25 +352,27 @@ module honeycm(wid=3, hgt=2, bases=1) {
 module blankm(wid=3, hgt=2, bases=1, basex=[0,2,0,2], basey=[0,1,0,1]) {
     mywid = TWIDTH * wid;
     myhgt = TDEPTH * hgt;
+    myborder = 1;
     // Build the face with a ridge around the outside.  Provides a bit
     // of rigidity and support so that edges don't buckle. 
     difference() {
         cube([mywid, myhgt, TFACE+1.65]);
-        translate([TBORDER, TBORDER, TFACE-.01]) cube([mywid-(TBORDER*2), myhgt-(TBORDER*2), 2.01]);
+        //translate([TBORDER, TBORDER, TFACE-.01]) cube([mywid-(TBORDER*2), myhgt-(TBORDER*2), 2.01]);
+        translate([myborder, myborder, TFACE-.01]) cube([mywid-(myborder*2), myhgt-(myborder*2), 2.01]);
     }
     if (bases == 2) {
         for (x=[0:TWIDTH:mywid-1], y=[0:TDEPTH:myhgt-1])
-            translate([x, y, TFACE-.15]) sbase(type=bMStyle);
+            translate([x, y, BASEZOFF]) sbase(type=bMStyle);
     }
     if (bases == 1) {
         for (x=[0, mywid-TWIDTH], y=[0, myhgt-TDEPTH])
-            translate([x, y, TFACE-.15]) sbase(type=bMStyle);
+            translate([x, y, BASEZOFF]) sbase(type=bMStyle);
     }
     if (bases == 3) {
         assert((len(basex)==len(basey)), "bMB_basex and bMB_basey have different sizes");
         for (i = [0:len(basex)-1]) {
             //echo(basex[i], basey[i]);
-            translate([basex[i]*TWIDTH, basey[i]*TDEPTH, TFACE-.15]) sbase(type=bMStyle);
+            translate([basex[i]*TWIDTH, basey[i]*TDEPTH, BASEZOFF]) sbase(type=bMStyle);
         }
     }
 }
@@ -364,49 +383,49 @@ module blankm(wid=3, hgt=2, bases=1, basex=[0,2,0,2], basey=[0,1,0,1]) {
 if (bBlank) {
     translate([TWIDTH*0, TDEPTH*0, 0]) { 
         blank(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        //translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bHorizontal) {
     translate([TWIDTH*1+4, TDEPTH*0, 0]) { 
         straight(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bDiagonal) {
     translate([TWIDTH*0, TDEPTH*1+4, 0]) { 
         diagonal(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle); 
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle); 
     }
 }
 if (bSunburst) {
     translate([TWIDTH*1+4, TDEPTH*1+4, 0]) { 
         star(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bCrosshatch) {
     translate([TWIDTH*2+8, TDEPTH*0, 0]) { 
         crosshatch(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bLattice) {
     translate([TWIDTH*2+8, TDEPTH*1+4, 0]) {
         lattice(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bDiamond) {
     translate([TWIDTH*0, TDEPTH*2+8, 0]) { 
         diamond(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bHoneycomb) {
     translate([TWIDTH*1+4, TDEPTH*2+8, 0]) {
         honeyc(); 
-        translate([0, 0, TFACE-.15]) sbase(type=bMStyle);
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
 if (bBase) {
