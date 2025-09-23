@@ -107,6 +107,7 @@ Easiest:
 | bLattice        | Crossed diagonal slats                |
 | bDiamond        | Crossed horizontal and diagonal slats |
 | bSunburst       | Rayed star                            |
+| bHgrate         | Horizontal slats 45 degrees from vert |
 | bHoneycomb      | Honeycomb tile                        |
 | bHoneycombMulti | Multi-tile honeycomb                  |
 | bMBlank         | Multi-tile blank                      |

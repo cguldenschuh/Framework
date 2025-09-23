@@ -26,7 +26,8 @@
 //                                  3. Change the blank tile to use the Framework .stl
 //                                     instead of building it.
 //                                  4. Force the support border to be 1mm on multi-tiles.
-
+//              20250905    cpg     added hgrate - horizontal slats twisted 45 degrees on the
+//                                  long axis.
 /* [Build Selection] */
 
 // Mount style
@@ -47,6 +48,8 @@ bSunburst = false;
 bDiamond = false;
 // Honeycomb - normal size tile
 bHoneycomb = false;
+// Horizontal grate (slats at 45 degrees)
+bHgrate = false;
 // Skeletonized base
 bBase = false;
 // Multi tile honeycomb
@@ -378,6 +381,25 @@ module blankm(wid=3, hgt=2, bases=1, basex=[0,2,0,2], basey=[0,1,0,1]) {
 }
 
 //
+// hgrate
+// slats at a 45 degree angle
+//
+CSIDE = 1.8;
+module hgrate() {
+    difference() {
+        cube([TWIDTH, TWIDTH, TFACE]);
+        for (i = [0:CSIDE*sqrt(2):TWIDTH-CSIDE]) {
+            translate([i, 0, 0]) rotate([0, 45, 0]) cube([CSIDE, TWIDTH, CSIDE]);
+        }
+    }
+    difference() {
+        cube([TWIDTH, TDEPTH, TFACE]);
+        translate([TBORDER, TBORDER, -.01]) cube([TWIDTH-(TBORDER*2), TDEPTH-(TBORDER*2), TFACE+.02]);
+    }
+}
+
+
+//
 // Main
 //
 if (bBlank) {
@@ -428,8 +450,14 @@ if (bHoneycomb) {
         translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
     }
 }
-if (bBase) {
+if (bHgrate) {
     translate([TWIDTH*2+8, TDEPTH*2+8, 0]) {
+       hgrate();
+        translate([0, 0, BASEZOFF]) sbase(type=bMStyle);
+    }
+}
+if (bBase) {
+    translate([TWIDTH*0, -(TDEPTH*1+4), 0]) {
        sbase(type=bMStyle);
     }
 }
